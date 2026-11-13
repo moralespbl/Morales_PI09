@@ -1,0 +1,45 @@
+name: Morales_PI09 - LECAPs/BONCAPs
+
+on:
+  schedule:
+    # Lunes a viernes 17:30 hora Argentina (GitHub usa UTC: ART = UTC-3)
+    - cron: "30 20 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Instalar Chromium para Playwright
+        run: playwright install --with-deps chromium
+
+      - name: Ejecutar pipeline
+        env:
+          WEB_USER: ${{ secrets.WEB_USER }}
+          WEB_PASS: ${{ secrets.WEB_PASS }}
+          WEB_URL: ${{ secrets.WEB_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_SHEETS_CREDENTIALS_JSON: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS_JSON }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+        run: python main.py
+
+      - name: Guardar capturas de depuración si falló
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug
+          path: data/debug_*
+          if-no-files-found: ignore
