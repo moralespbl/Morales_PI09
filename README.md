@@ -34,3 +34,7 @@ mesaifa.netlify.app es de una sola pantalla (la URL no cambia): login (`#ag-emai
 ## Seguridad
 Nunca pegues tokens ni claves en chats, código o commits. Si ya se expusieron, regeneralos
 (BotFather → `/revoke`, nueva clave de Gemini, nueva clave de la cuenta de servicio).
+
+![Mensaje de Telegram con las mejores oportunidades](imagenes\telegram_renta_fija.png)  
+  
+![Informacion enviada a Google Sheets](imagenes\shet_renta_fija.png)
